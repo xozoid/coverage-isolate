@@ -1,4 +1,4 @@
-from new_project.dummy import answer
+from coverage_isolate.dummy import answer
 
 
 def test_answer_returns_placeholder() -> None:

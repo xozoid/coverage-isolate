@@ -1,14 +1,14 @@
 ---
 name: release
 description: >-
-  Prepares and validates releases for this Python package template. Use when planning,
+  Prepares and validates releases for this Python package. Use when planning,
   validating, or publishing a release, including version tags, distributions, GitHub
   Releases, or PyPI trusted publishing.
 ---
 
 # Release preparation and validation
 
-This template derives package versions from Git history and tags through hatch-vcs.
+This project derives package versions from Git history and tags through hatch-vcs.
 Review the release workflow in `.github/workflows/publish.yml` and current packaging
 configuration before preparing a release.
 
@@ -19,9 +19,8 @@ configuration before preparing a release.
   distributions with `uv build`.
 - Validate the distributions and confirm the version in package metadata matches the
   intended tag. Follow the existing validation in `.github/workflows/publish.yml`.
-- If the project publishes to PyPI, confirm its trusted publisher and `pypi` GitHub
-  environment are configured for the repository and workflow. This template may be
-  adapted for projects that do not publish to PyPI; skip PyPI steps for those projects.
+- Confirm the PyPI trusted publisher and `pypi` GitHub environment are configured for
+  this repository and workflow before a release.
 - GitHub Release creation, tag creation, package upload, and other publishing are
   external actions. Never create tags, publish releases, or upload packages without
   explicit user authorization.

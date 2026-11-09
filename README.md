@@ -1,36 +1,11 @@
-# new-project
+# coverage-isolate
 
 [![CI][ci-badge]][ci] [![PyPI publishing][publish-badge]][publish]
 
 ## Overview
 
-This repository is a reusable template for Python packages. It includes Hatchling with
-`hatch-vcs` for builds and Git-derived versions, pytest and coverage for tests, Ruff for
-linting and formatting, `basedpyright` for type checking, and `prek` hooks for local
-checks. Prettier, `Taplo`, `yamlfmt`, Vale, and `codespell` cover formatting and writing
-checks. GitHub Actions runs these checks and publishes tagged releases to PyPI.
-
-## Create a project
-
-On GitHub, select **Use this template**, create a repository under your account or
-organization, and clone that repository.
-
-Replace `new-project` with your distribution name and `new_project` with its Python
-import package name. Rename the `new_project/` directory, update the wheel package in
-`[tool.hatch.build.targets.wheel]`, and adjust coverage and `basedpyright` paths in
-`pyproject.toml`. Update the project metadata there, including description, keywords,
-classifiers, Python support, and license as needed. Also change the npm package name in
-`package.json` and the PyPI project URL in `.github/workflows/publish.yml`.
-
-For example, for distribution `sample-tool` and import package `sample_tool`, change the
-project name to `sample-tool`, rename the package directory to `sample_tool/`, and set
-the wheel package to `sample_tool`. Update references in tests and workflow commands,
-including the build import smoke test in `.github/workflows/ci.yml`. Review the Python
-version matrix and tool versions in CI, Dependabot, `pyproject.toml`, `uv.lock`,
-`prek.toml`, and `package-lock.json` for your project's needs. Configure PyPI trusted
-publishing for the repository's `pypi` GitHub environment and the publishing workflow.
-After creating the new repository, replace `xozoid/python-template` in the badge
-definitions at the bottom with its owner and repository name.
+`coverage-isolate` is a Python package for reporting test coverage for selected source
+files. The package implementation is still in progress.
 
 ## Development setup
 
@@ -72,14 +47,14 @@ applies only if version detection fails. Publish a GitHub Release whose tag is a
 version tag, optionally prefixed with `v` (for example, `v1.2.3`). Publishing the
 release starts the publish workflow, which runs the CI workflow, builds the package, and
 checks that the tag version matches the built package version. After validation, GitHub
-Actions publishes to PyPI using trusted publishing. The workflow expects a PyPI project
-matching the configured name and a GitHub environment named `pypi`.
+Actions publishes to PyPI using trusted publishing. The workflow expects the
+`coverage-isolate` PyPI project and a GitHub environment named `pypi`.
 
 [ci]:
-  https://github.com/xozoid/python-template/actions/workflows/ci.yml?query=branch%3Amain
+  https://github.com/xozoid/coverage-isolate/actions/workflows/ci.yml?query=branch%3Amain
 [ci-badge]:
-  https://github.com/xozoid/python-template/actions/workflows/ci.yml/badge.svg?branch=main
+  https://github.com/xozoid/coverage-isolate/actions/workflows/ci.yml/badge.svg?branch=main
 [publish]:
-  https://github.com/xozoid/python-template/actions/workflows/publish.yml?query=branch%3Amain
+  https://github.com/xozoid/coverage-isolate/actions/workflows/publish.yml?query=branch%3Amain
 [publish-badge]:
-  https://github.com/xozoid/python-template/actions/workflows/publish.yml/badge.svg?branch=main
+  https://github.com/xozoid/coverage-isolate/actions/workflows/publish.yml/badge.svg?branch=main
