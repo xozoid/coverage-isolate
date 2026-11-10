@@ -1,6 +1,6 @@
 # coverage-isolate
 
-[![CI][ci-badge]][ci] [![PyPI publishing][publish-badge]][publish]
+[![CI][ci-badge]][ci] [![PyPI publishing][pypi-badge]][pypi-url]
 
 ## Overview
 
@@ -39,6 +39,12 @@ uv run prek run --all-files
 See [CONTRIBUTING.md](CONTRIBUTING.md) for dependency updates, checks, and release
 steps.
 
+The project records the full upstream template commit used during adoption in
+`.agents/skills/update-from-template/HISTORY.md`. Use the `update-from-template` skill
+for later template updates; it preserves project-specific changes and updates the
+history only after the migration and checks succeed. That file tracks the template
+source, applied revision, and intentionally skipped changes.
+
 ## Releases
 
 `hatch-vcs` uses setuptools-scm to derive versions from Git tags and history, including
@@ -54,7 +60,5 @@ Actions publishes to PyPI using trusted publishing. The workflow expects the
   https://github.com/xozoid/coverage-isolate/actions/workflows/ci.yml?query=branch%3Amain
 [ci-badge]:
   https://github.com/xozoid/coverage-isolate/actions/workflows/ci.yml/badge.svg?branch=main
-[publish]:
-  https://github.com/xozoid/coverage-isolate/actions/workflows/publish.yml?query=branch%3Amain
-[publish-badge]:
-  https://github.com/xozoid/coverage-isolate/actions/workflows/publish.yml/badge.svg?branch=main
+[pypi-badge]: https://img.shields.io/pypi/v/coverage-isolate.svg
+[pypi-url]: https://pypi.org/project/coverage-isolate/
