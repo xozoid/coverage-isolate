@@ -29,8 +29,7 @@ Common commands:
 
 ```sh
 uv run pytest
-uv run coverage run -m pytest
-uv run coverage report
+uv run pytest --cov
 tools/linters.sh
 tools/formatters.sh
 uv run prek run --all-files
