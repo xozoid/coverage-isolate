@@ -1,5 +1,5 @@
-coverage-isolate
 Coverage.py
 Dependabot('s)?
+coverage-isolate
 pytest
 uv

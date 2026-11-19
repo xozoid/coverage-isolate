@@ -2,7 +2,7 @@
 
 Template-Source: `xozoid/python-template`
 
-Template-Revision: `e015c65df679ed634b6671fb73ccd85c40c667e8`
+Template-Revision: `c0aa43b831b7772df617098a3227f5be0a6d5ccb`
 
 The revision is the full upstream template commit last fully applied to this project. It
 is not a commit from the target repository. Adoption sets the initial revision to the
@@ -22,4 +22,7 @@ or no longer relevant.
 
 - `e015c65df679ed634b6671fb73ccd85c40c667e8`,
   `.agents/skills/project-initialization/SKILL.md`: Did not add this skill because
-  project initialization is complete and that workflow is not applicable here.
+  project initialization is complete and that workflow is not applicable here. The later
+  initialization changes were reviewed through
+  `c0aa43b831b7772df617098a3227f5be0a6d5ccb`; they confirm the skill should be removed
+  after adoption and checks succeed.
