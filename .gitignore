@@ -28,3 +28,6 @@ node_modules/
 dist/
 build/
 *.egg-info/
+
+# Generated package version
+/coverage_isolate/_version.py

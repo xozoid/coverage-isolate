@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from coverage_isolate.dummy import answer
 
 
