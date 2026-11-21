@@ -1,0 +1,3 @@
+# Report an unknown isolation setting.
+[tool.coverage-isolate]
+unknown = true

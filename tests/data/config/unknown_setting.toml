@@ -1,0 +1,3 @@
+# Reject an unknown setting.
+[tool.coverage-isolate]
+unknown = true

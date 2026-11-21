@@ -1,0 +1,3 @@
+# Use defaults when coverage options are absent.
+[project]
+name = 'fixture'

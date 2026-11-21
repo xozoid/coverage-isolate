@@ -37,5 +37,5 @@ jobs:
       - name: Lint documentation
         run: |
           git ls-files --cached --others --exclude-standard -z -- \
-            '*.md' '*.rst' '*.adoc' '*.txt' ':(exclude).vale/**' \
+            '*.md' '*.rst' '*.adoc' '*.txt' ':(exclude).vale/**' ':(exclude)tests/data/**' \
             | xargs -0 vale --minAlertLevel=error --output=line

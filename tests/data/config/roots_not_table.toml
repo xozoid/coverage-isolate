@@ -1,0 +1,3 @@
+# Reject a numeric test-roots value.
+[tool.coverage-isolate]
+test-roots = 1

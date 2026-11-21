@@ -1,0 +1,3 @@
+# Reject a source root outside the project.
+[tool.coverage-isolate.test-roots]
+"../src" = "tests"

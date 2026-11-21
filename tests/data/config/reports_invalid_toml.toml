@@ -1,0 +1,2 @@
+# Report invalid TOML.
+[tool.coverage-isolate

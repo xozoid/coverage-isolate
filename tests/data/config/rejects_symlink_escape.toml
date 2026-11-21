@@ -1,0 +1,3 @@
+# Reject a test path that escapes through a symlink.
+[tool.coverage-isolate.test-paths]
+"src/mod.py" = "linked/test.py"
