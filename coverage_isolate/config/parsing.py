@@ -42,7 +42,7 @@ def parse_config(
     return CoverageIsolateConfig(
         project_root=root,
         source=_coverage_string_tuple(source, "run:source", allow_none=True),
-        run_omit=_coverage_string_tuple(run_omit, "run:omit"),
+        run_omit=_coverage_string_tuple(run_omit, "run:omit", allow_none=True) or (),
         report_omit=_coverage_string_tuple(report_omit, "report:omit", allow_none=True),
         test_roots=test_roots,
         test_paths=test_paths,

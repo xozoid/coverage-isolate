@@ -136,3 +136,15 @@ def test_parse_config_rejects_non_string_coverage_source(
 ) -> None:
     with pytest.raises(exc.ConfigurationError, match=r"coverage option run:source"):
         parse_config(tmp_path, {}, source, [], None)
+
+
+@pytest.mark.parametrize("run_omit", [None, []])
+def test_parse_config_accepts_unset_run_omit(tmp_path: Path, run_omit: object) -> None:
+    config = parse_config(tmp_path, {}, None, run_omit, None)
+
+    assert config.run_omit == ()
+
+
+def test_parse_config_rejects_invalid_run_omit(tmp_path: Path) -> None:
+    with pytest.raises(exc.ConfigurationError, match=r"coverage option run:omit"):
+        parse_config(tmp_path, {}, None, 0, None)
