@@ -13,3 +13,6 @@ dist
 
 # Dependency lockfile
 uv.lock
+
+# Test fixtures may contain deliberately invalid or unformatted data
+tests/data

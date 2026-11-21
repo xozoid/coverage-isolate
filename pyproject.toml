@@ -12,7 +12,7 @@ classifiers = [
   "Programming Language :: Python :: 3.14",
   "Programming Language :: Python :: 3.15",
 ]
-dependencies = []
+dependencies = ["coverage>=7", "pytest-cov>=5", "pytest>=8"]
 description = "Isolated coverage reporting for Python tests."
 dynamic = ["version"]
 keywords = ["coverage", "pytest", "testing"]
@@ -21,6 +21,15 @@ license-files = ["LICENSE"]
 name = "coverage-isolate"
 readme = "README.md"
 requires-python = ">=3.12"
+
+[project.optional-dependencies]
+completion = ["argcomplete>=3"]
+
+[project.scripts]
+coverage-isolate = "coverage_isolate.cli:main"
+
+[project.entry-points.pytest11]
+coverage-isolate = "coverage_isolate.plugin"
 
 [dependency-groups]
 coverage = ["pytest-cov==7.1.0", { include-group = "test" }]
@@ -44,11 +53,15 @@ test = ["pytest==9.2.0"]
 types = ["basedpyright==1.40.2", { include-group = "test" }]
 
 [tool.basedpyright]
+exclude = ["tests/data"]
 include = ["coverage_isolate", "tests"]
 pythonVersion = "3.12"
 typeCheckingMode = "strict"
 venv = ".venv"
 venvPath = "."
+
+[tool.codespell]
+skip = "node_modules,tests/data"
 
 [tool.coverage.report]
 fail_under = 100
@@ -67,6 +80,8 @@ addopts = ["--durations=10", "--import-mode=importlib"]
 testpaths = ["tests"]
 
 [tool.ruff]
+extend-exclude = ["tests/data"]
+force-exclude = true
 line-length = 88
 target-version = "py312"
 
@@ -84,6 +99,9 @@ convention = "google"
 
 [tool.ruff.lint.isort]
 required-imports = ["from __future__ import annotations"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
 
 [tool.ruff.lint.per-file-ignores]
 "!**/conftest.py" = ["pytest-fixture-autouse"]
@@ -106,6 +124,7 @@ required-imports = ["from __future__ import annotations"]
   "undocumented-public-nested-class",
   "unused-function-argument",
 ]
+"tests/test_cli.py" = ["subprocess-without-shell-equals-true"]
 
 [tool.hatch.version]
 fallback-version = "0.1.0"

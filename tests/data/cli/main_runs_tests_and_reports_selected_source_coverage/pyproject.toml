@@ -1,0 +1,4 @@
+# Run tests and report coverage for the selected source.
+[tool.pytest.ini_options]
+testpaths = ['tests']
+python_files = ["example_case.py"]

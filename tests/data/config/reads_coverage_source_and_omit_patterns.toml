@@ -1,0 +1,13 @@
+# Read coverage options and test mappings.
+[tool.coverage.run]
+source = ["src", "pkg.module"]
+omit = ["*/generated/*", "*/legacy.py"]
+
+[tool.coverage.report]
+omit = ["*/tests/*"]
+
+[tool.coverage-isolate.test-roots]
+"pkg.module" = "tests"
+
+[tool.coverage-isolate.test-paths]
+"src/api.py" = ["tests/test_api.py"]

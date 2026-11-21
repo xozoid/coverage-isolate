@@ -1,0 +1,3 @@
+# Reject the unknown test-root setting.
+[tool.coverage-isolate]
+test-root = "tests"

@@ -1,0 +1,3 @@
+# Reject the unknown exclude-files setting.
+[tool.coverage-isolate]
+exclude-files = ["generated.py"]

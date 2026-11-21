@@ -1,0 +1,3 @@
+# Reject duplicate test paths.
+[tool.coverage-isolate.test-paths]
+"src/mod.py" = ["tests/test.py", "tests/test.py"]

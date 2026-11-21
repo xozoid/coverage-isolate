@@ -1,0 +1,3 @@
+# Reject a non-string test path.
+[tool.coverage-isolate.test-paths]
+"src/mod.py" = 1

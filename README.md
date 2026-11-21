@@ -7,6 +7,37 @@
 `coverage-isolate` is a Python package for reporting test coverage for selected source
 files. The package implementation is still in progress.
 
+## Configuration
+
+Configure source and test paths in your project's `pyproject.toml`:
+
+```toml
+[tool.coverage.run]
+source = ["coverage_isolate"]
+
+[tool.coverage-isolate.test-roots]
+"coverage_isolate" = "tests"
+
+[tool.coverage-isolate.test-paths]
+"coverage_isolate/config.py" = "tests/test_config.py"
+```
+
+Source selection and file omissions use Coverage.py's settings, including `run.omit` and
+`report.omit`. Explicit test paths may be a single path or an array of paths. Test
+mapping will use pytest's `testpaths` by default, falling back to `tests` when it's
+unset. Configuration validation is available; source discovery, test mapping, and
+coverage execution are still in progress.
+
+For shell completion, install the optional extra with
+`pip install 'coverage-isolate[completion]'`. In Bash, enable completion with:
+
+```sh
+eval "$(register-python-argcomplete coverage-isolate)"
+```
+
+See the [argcomplete documentation](https://kislyuk.github.io/argcomplete/) for other
+shells and persistent setup.
+
 ## Development setup
 
 Install Git, Python 3.12 or later, [uv](https://docs.astral.sh/uv/), Node.js 24 or later

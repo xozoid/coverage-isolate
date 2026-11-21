@@ -1,0 +1,3 @@
+# Reject a test-roots value that is not a table.
+[tool.coverage-isolate]
+test-roots = 'not a table'

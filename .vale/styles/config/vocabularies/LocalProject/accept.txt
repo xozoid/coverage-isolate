@@ -1,5 +1,6 @@
 Coverage.py
 Dependabot('s)?
+argcomplete
 coverage-isolate
 pytest
 uv

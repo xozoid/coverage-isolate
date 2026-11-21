@@ -53,6 +53,9 @@ standard file checks, Vale, and Prettier. `tools/env.sh` installs the Git hooks 
 packages in `uv.lock`; run it after changing hook revisions or relevant dependencies,
 then review and commit the lockfile changes.
 
+Test fixtures under `tests/data/` are excluded from linting, formatting, and hooks so
+they can contain invalid or unformatted input.
+
 Dependabot's weekly uv updates cover exact-pinned development dependencies. Its
 `increase` versioning strategy advances the manifest constraint, while the uv updater
 resolves and records the update in `uv.lock`. CI runs `sync-with-uv` on every pull

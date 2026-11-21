@@ -1,0 +1,3 @@
+# Reject an absolute test path.
+[tool.coverage-isolate.test-paths]
+"src/mod.py" = "/tests/test.py"
