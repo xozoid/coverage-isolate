@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import runpy
 import shutil
 import subprocess
 import sys
@@ -8,7 +9,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from coverage_isolate import __version__
+from coverage_isolate import __version__, cli
 from coverage_isolate.cli import build_parser, main
 
 if TYPE_CHECKING:
@@ -44,6 +45,33 @@ def test_help_succeeds_without_argcomplete(monkeypatch: pytest.MonkeyPatch) -> N
         main(["--help"])
 
     assert exc.value.code == 0
+
+
+def test_completion_propagates_missing_dependency(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def missing_dependency(name: str) -> ModuleType:
+        raise ModuleNotFoundError(name="completion_dependency")
+
+    monkeypatch.setattr(cli, "import_module", missing_dependency)
+
+    with pytest.raises(ModuleNotFoundError) as error:
+        main(["--help"])
+
+    assert error.value.name == "completion_dependency"
+
+
+def test_module_entry_point_exits_with_version(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.setattr(sys, "argv", ["coverage-isolate", "--version"])
+
+    with pytest.raises(SystemExit) as error:
+        runpy.run_path(cli.__file__, run_name="__main__")
+
+    assert error.value.code == 0
+    assert capsys.readouterr().out == f"coverage-isolate {__version__}\n"
 
 
 @pytest.mark.parametrize("flag", ["--version", "-v"])

@@ -60,7 +60,7 @@ Common commands:
 
 ```sh
 uv run pytest
-uv run pytest --cov
+uv run pytest --cov -p no:coverage-isolate
 tools/linters.sh
 tools/formatters.sh
 uv run prek run --all-files

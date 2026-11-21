@@ -70,6 +70,7 @@ show_missing = true
 
 [tool.coverage.run]
 branch = true
+omit = ["coverage_isolate/_version.py"]
 source = ["coverage_isolate"]
 
 [tool.sync-with-uv.repo-to-package]

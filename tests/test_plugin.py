@@ -40,6 +40,19 @@ def test_pytest_parser_accepts_isolation_options() -> None:
     assert parser.group.options["--iso-source"]["action"] == "append"
 
 
+def test_pytest_configure_allows_isolation_to_be_disabled(tmp_path: Path) -> None:
+    class Config:
+        @property
+        def rootpath(self) -> Path:
+            return tmp_path
+
+        @staticmethod
+        def getoption(name: str) -> object:
+            return False if name == "iso" else []
+
+    pytest_configure(Config())
+
+
 def test_iso_source_requires_iso(tmp_path: Path) -> None:
     class Config:
         @property

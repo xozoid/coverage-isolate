@@ -38,7 +38,7 @@ Run tests and coverage from the repository root:
 
 ```sh
 uv run pytest
-uv run pytest --cov
+uv run pytest --cov -p no:coverage-isolate
 ```
 
 The coverage report enforces the configured 100% minimum. `tools/linters.sh` runs Ruff,
@@ -89,10 +89,11 @@ remain unchanged.
 
 Open a pull request against `main`. CI keeps checks in separate jobs: pytest on Python
 3.12 through 3.15, pytest against the lowest compatible runtime dependencies on Python
-3.12, Ruff, `basedpyright`, formatting (Ruff, Prettier, `Taplo`, text file sorting),
-spelling, Vale, coverage, wheel installation and import validation on each supported
-Python version, and `sync-with-uv`. Run the relevant local commands and ensure CI
-passes. Update tests and documentation when behavior or contributor instructions change.
+3.12 including minimum pytest, Ruff, `basedpyright`, formatting (Ruff, Prettier,
+`Taplo`, text file sorting), spelling, Vale, coverage, wheel installation and import
+validation on each supported Python version, and `sync-with-uv`. Run the relevant local
+commands and ensure CI passes. Update tests and documentation when behavior or
+contributor instructions change.
 
 ## Releases
 

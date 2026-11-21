@@ -7,6 +7,7 @@ import pytest
 
 import coverage_isolate.exceptions as exc
 from coverage_isolate.config import load_config
+from coverage_isolate.config.parsing import parse_config
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -126,3 +127,12 @@ def test_load_config_rejects_non_table_values(project: Path) -> None:
 def test_load_config_reports_invalid_toml(project: Path) -> None:
     with pytest.raises(exc.ConfigurationError, match=r"Could not read"):
         load_config(project)
+
+
+@pytest.mark.parametrize("source", [1, ["src", 1]])
+def test_parse_config_rejects_non_string_coverage_source(
+    tmp_path: Path,
+    source: object,
+) -> None:
+    with pytest.raises(exc.ConfigurationError, match=r"coverage option run:source"):
+        parse_config(tmp_path, {}, source, [], None)
