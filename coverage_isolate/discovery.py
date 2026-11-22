@@ -2,14 +2,19 @@
 
 from __future__ import annotations
 
+import functools
 from dataclasses import dataclass, field
-from pathlib import Path
 from typing import TYPE_CHECKING
 
 import coverage_isolate.exceptions as exc
+from coverage_isolate.utils import resolve_path
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
+    from pathlib import Path
+
+
+resolve = functools.partial(resolve_path, exc_type=exc.SourceDiscoveryError)
 
 
 @dataclass
@@ -38,7 +43,7 @@ class _Discovery:
             msg = f"Could not read source directory {directory}: {error}"
             raise exc.SourceDiscoveryError(msg) from error
         for entry in children:
-            child = _absolute(self.root, entry)
+            child = resolve(self.root, entry)
             self.validate(child)
             if child.is_dir():
                 self.walk(child)
@@ -67,7 +72,6 @@ class _Discovery:
         Raises:
             SourceDiscoveryError: If the path is outside configured roots.
         """
-        _validate_containment(self.root, path)
         if self.source_roots and not any(
             path.is_relative_to(root) for root in self.source_roots
         ):
@@ -99,7 +103,7 @@ def discover_sources(
     """
     root = project_root.resolve()
     resolved_roots = tuple(_resolve_source_root(root, path) for path in source_roots)
-    selected_paths = tuple(_absolute(root, path) for path in selections)
+    selected_paths = tuple(resolve(root, path) for path in selections)
     discovery = _Discovery(root, resolved_roots, frozenset(exclude_files))
     for path in selected_paths or resolved_roots:
         discovery.validate(path)
@@ -108,17 +112,6 @@ def discover_sources(
         else:
             discovery.add_source(path)
     return tuple(sorted(discovery.discovered))
-
-
-def _absolute(project_root: Path, path: Path | str) -> Path:
-    path = Path(path)
-    path = path if path.is_absolute() else project_root / path
-    try:
-        path = path.resolve(strict=True)
-    except OSError as error:
-        msg = f"Could not resolve source path {path}: {error}"
-        raise exc.SourceDiscoveryError(msg) from error
-    return path
 
 
 def _resolve_source_root(project_root: Path, source_root: Path | str) -> Path:
@@ -131,20 +124,8 @@ def _resolve_source_root(project_root: Path, source_root: Path | str) -> Path:
         SourceDiscoveryError: If the root is missing, escapes the project, or
             is not a directory.
     """
-    path = _absolute(project_root, source_root)
-    _validate_containment(project_root, path)
+    path = resolve(project_root, source_root)
     if not path.is_dir():
         msg = f"Configured source root is not a directory: {path}"
         raise exc.SourceDiscoveryError(msg)
     return path
-
-
-def _validate_containment(project_root: Path, path: Path) -> None:
-    """Resolve a path and ensure it remains inside the project root.
-
-    Raises:
-        SourceDiscoveryError: If the path cannot resolve or escapes the root.
-    """
-    if not path.is_relative_to(project_root):
-        msg = f"Source path resolves outside the project root: {path}"
-        raise exc.SourceDiscoveryError(msg)

@@ -9,3 +9,7 @@ class ConfigurationError(Exception):
 
 class SourceDiscoveryError(Exception):
     """Error when a source selection is invalid."""
+
+
+class MappingError(Exception):
+    """Error when source-to-test mapping paths are invalid."""

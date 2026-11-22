@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import datetime as dt
 import shutil
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from decimal import Decimal
 from pathlib import Path
 from typing import TYPE_CHECKING, cast
@@ -53,3 +53,29 @@ def project(tmp_path: Path, request: FixtureRequest, data_dir: Path) -> Path:
     else:
         shutil.copyfile(source.with_suffix(".toml"), tmp_path / "pyproject.toml")
     return tmp_path
+
+
+@pytest.fixture
+def project_tree(tmp_path: Path) -> Callable[..., tuple[Path, ...]]:
+    """Create a project containing the requested files and directories.
+
+    Returns:
+        A factory for temporary project trees.
+    """
+
+    def create(
+        *files: str,
+        directories: tuple[str, ...] = (),
+        root: Path | None = None,
+    ) -> tuple[Path, ...]:
+        project = root if root is not None else tmp_path / "project"
+        project.mkdir(exist_ok=True)
+        for directory in directories:
+            (project / directory).mkdir(parents=True, exist_ok=True)
+        for file in files:
+            path = project / file
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.touch()
+        return (project, *(project / file for file in files))
+
+    return create
