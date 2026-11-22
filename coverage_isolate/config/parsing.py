@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import functools
 from typing import TYPE_CHECKING, Literal, cast, overload
 
 import coverage_isolate.exceptions as exc
@@ -10,6 +11,8 @@ from coverage_isolate.utils import resolve_path
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+resolve = functools.partial(resolve_path, exc_type=exc.SourceDiscoveryError)
 
 
 def parse_config(
@@ -153,8 +156,8 @@ def _directory_mapping(
     """
     result: dict[Path, Path] = {}
     for source, target in mapping.items():
-        source_path = resolve_path(root, _string(source, setting), label=setting)
-        target_path = resolve_path(root, _string(target, setting), label=setting)
+        source_path = resolve(root, _string(source, setting), label=setting)
+        target_path = resolve(root, _string(target, setting), label=setting)
         result[source_path] = target_path
     return result
 
@@ -174,11 +177,7 @@ def _test_path_mapping(
     """
     result: dict[Path, tuple[Path, ...]] = {}
     for source, raw_targets in mapping.items():
-        source_path = resolve_path(
-            root,
-            _string(source, "test-paths"),
-            label="test-paths",
-        )
+        source_path = resolve(root, _string(source, "test-paths"), label="test-paths")
         if isinstance(raw_targets, list):
             targets = cast("list[object]", raw_targets)
         else:
@@ -187,7 +186,7 @@ def _test_path_mapping(
             msg = f"test-paths mapping for {source_path} cannot be empty"
             raise exc.ConfigurationError(msg)
         paths = tuple(
-            resolve_path(root, _string(target, "test-paths"), label="test-paths")
+            resolve(root, _string(target, "test-paths"), label="test-paths")
             for target in targets
         )
         if len(set(paths)) != len(paths):

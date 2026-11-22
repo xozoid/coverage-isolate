@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import functools
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
@@ -11,6 +12,9 @@ from coverage_isolate.utils import resolve_path
 if TYPE_CHECKING:
     from collections.abc import Iterable
     from pathlib import Path
+
+
+resolve = functools.partial(resolve_path, exc_type=exc.SourceDiscoveryError)
 
 
 @dataclass
@@ -39,7 +43,7 @@ class _Discovery:
             msg = f"Could not read source directory {directory}: {error}"
             raise exc.SourceDiscoveryError(msg) from error
         for entry in children:
-            child = resolve_path(self.root, entry)
+            child = resolve(self.root, entry)
             self.validate(child)
             if child.is_dir():
                 self.walk(child)
@@ -99,7 +103,7 @@ def discover_sources(
     """
     root = project_root.resolve()
     resolved_roots = tuple(_resolve_source_root(root, path) for path in source_roots)
-    selected_paths = tuple(resolve_path(root, path) for path in selections)
+    selected_paths = tuple(resolve(root, path) for path in selections)
     discovery = _Discovery(root, resolved_roots, frozenset(exclude_files))
     for path in selected_paths or resolved_roots:
         discovery.validate(path)
@@ -120,7 +124,7 @@ def _resolve_source_root(project_root: Path, source_root: Path | str) -> Path:
         SourceDiscoveryError: If the root is missing, escapes the project, or
             is not a directory.
     """
-    path = resolve_path(project_root, source_root)
+    path = resolve(project_root, source_root)
     if not path.is_dir():
         msg = f"Configured source root is not a directory: {path}"
         raise exc.SourceDiscoveryError(msg)
