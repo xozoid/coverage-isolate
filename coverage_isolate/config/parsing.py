@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Literal, cast, overload
+from typing import TYPE_CHECKING, Literal, cast, overload
 
 import coverage_isolate.exceptions as exc
 from coverage_isolate.config.types import CoverageIsolateConfig
+from coverage_isolate.utils import resolve_path
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def parse_config(
@@ -23,8 +26,15 @@ def parse_config(
 
     Raises:
         ConfigurationError: If configuration values are invalid.
+        SourceDiscoveryError: If a project path cannot be resolved.
 
     """
+    try:
+        root = root.resolve(strict=True)
+    except OSError as error:
+        msg = f"Could not resolve root path {root}: {error}"
+        raise exc.SourceDiscoveryError(msg) from error
+
     tool = _table(document, "tool", "[tool] in pyproject.toml")
     raw = _table(tool, "coverage-isolate", "[tool.coverage-isolate]")
 
@@ -87,7 +97,7 @@ def _coverage_string_tuple(
     if isinstance(value, list):
         items = cast("list[object]", value)
         if all(isinstance(item, str) for item in items):
-            return tuple(cast("list[str]", value))
+            return tuple(cast("list[str]", items))
     msg = f"coverage option {setting} must be an array of strings"
     raise exc.ConfigurationError(msg)
 
@@ -130,30 +140,6 @@ def _table(
     raise exc.ConfigurationError(msg)
 
 
-def _relative_path(root: Path, value: str, setting: str) -> Path:
-    """Validate a configured relative path.
-
-    Returns:
-        The resolved absolute path inside the project.
-
-    Raises:
-        ConfigurationError: If the path is absolute or escapes the project.
-    """
-    path = Path(value)
-    if path.is_absolute():
-        msg = f"{setting} must be a project-relative path: {path}"
-        raise exc.ConfigurationError(msg)
-    resolved_root = root.resolve()
-    resolved_path = (resolved_root / path).resolve()
-    if resolved_path.is_relative_to(resolved_root):
-        return resolved_path
-    msg = (
-        f"{setting} must be a project-relative path; "
-        f"resolves outside the project root: {path}"
-    )
-    raise exc.ConfigurationError(msg)
-
-
 def _directory_mapping(
     root: Path,
     mapping: dict[str, object],
@@ -167,8 +153,8 @@ def _directory_mapping(
     """
     result: dict[Path, Path] = {}
     for source, target in mapping.items():
-        source_path = _relative_path(root, _string(source, setting), setting)
-        target_path = _relative_path(root, _string(target, setting), setting)
+        source_path = resolve_path(root, _string(source, setting), label=setting)
+        target_path = resolve_path(root, _string(target, setting), label=setting)
         result[source_path] = target_path
     return result
 
@@ -188,19 +174,22 @@ def _test_path_mapping(
     """
     result: dict[Path, tuple[Path, ...]] = {}
     for source, raw_targets in mapping.items():
-        source_path = _relative_path(root, _string(source, "test-paths"), "test-paths")
+        source_path = resolve_path(
+            root,
+            _string(source, "test-paths"),
+            label="test-paths",
+        )
         if isinstance(raw_targets, list):
             targets = cast("list[object]", raw_targets)
         else:
             targets = [raw_targets]
-        if targets:
-            paths = tuple(
-                _relative_path(root, _string(target, "test-paths"), "test-paths")
-                for target in targets
-            )
-        else:
+        if not targets:
             msg = f"test-paths mapping for {source_path} cannot be empty"
             raise exc.ConfigurationError(msg)
+        paths = tuple(
+            resolve_path(root, _string(target, "test-paths"), label="test-paths")
+            for target in targets
+        )
         if len(set(paths)) != len(paths):
             msg = f"test-paths mapping for {source_path} contains duplicates"
             raise exc.ConfigurationError(msg)
